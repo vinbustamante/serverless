@@ -1,0 +1,35 @@
+service: ${self:custom.project.name}-${self:custom.project.module}
+
+plugins:
+  - serverless-plugin-optimize
+  - serverless-offline
+
+provider:
+  name: aws
+  runtime: nodejs8.10
+  region: ap-southeast-1
+  stage: ${opt:stage, 'dev'}
+  memorySize: 128
+
+functions:
+  app:
+    name: ${self:provider.stage}-${self:custom.project.name}-${self:custom.project.module}
+    handler: dist/lambda.handler
+    events:
+      - http: # all routes get proxied to the Express router
+          path: /{proxy+}
+          method: ANY
+          
+package:
+  exclude:
+    - .git/**
+    - src/**
+    - test/**
+    - nodemon.json
+    - README.md
+
+custom:
+  project:
+    #accountId: !Ref AWS::AccountId
+    name: satscc
+    module: authentication
