@@ -8,7 +8,6 @@ export default class AuthService {
     constructor(private readonly jwtService: JwtService) {}
 
     async validateUser(payload: JwtPayloadDto): Promise<any> {
-        console.log('AuthService');
         return {
             id: 1,
             username: 'marvin'

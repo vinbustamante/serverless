@@ -18,7 +18,7 @@ import ApplicationRepository from './repositories/ApplicationRepository';
 import { AppController } from './controllers/app.controller';
 
 @Module({
-  imports: [
+  imports: [    
     PassportModule.register({ defaultStrategy: 'jwt' }),
     JwtModule.register({
       secretOrPrivateKey: 'secretKey',
@@ -38,5 +38,6 @@ import { AppController } from './controllers/app.controller';
     //services
     UtilService
   ],
+  exports: [PassportModule],
 })
 export class AppModule {}

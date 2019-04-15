@@ -3,6 +3,8 @@ import { Controller, Get, HttpCode, Post, Body, Inject } from '@nestjs/common';
 import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewModel';
 //import repositoryTypes from '../../../../../common/repositories/repositoryTypes';
 import ApplicationRepository from '../repositories/ApplicationRepository';
+import { HttpException } from '@nestjs/common';
+import ApplicationException from '../../../../../common/exception/ApplicationException';
 
 @Controller('authentication')
 export default class AuthenticationController {
@@ -16,6 +18,7 @@ export default class AuthenticationController {
     @Post()
     async createToken(@Body() credential: UserAuthenticationViewModel) {
         const application = await this._applicationRepository.getById('satscc-dashboard');
+        throw new ApplicationException('helo world');
         console.log('***************************');
         console.log(application);
         console.log('***************************');
