@@ -18,11 +18,10 @@ export default class AuthenticationController {
     @Post()
     async createToken(@Body() credential: UserAuthenticationViewModel) {
         const application = await this._applicationRepository.getById('satscc-dashboard');
-        throw new ApplicationException('helo world');
         console.log('***************************');
         console.log(application);
         console.log('***************************');
-
+        throw new ApplicationException('helo world');        
     }
     
 }

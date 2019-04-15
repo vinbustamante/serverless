@@ -14,6 +14,8 @@
       "arrow-parens": false,
       "object-literal-sort-keys": false
     },
-    "rulesDirectory": []
+    "rulesDirectory": [],
+    "trailing-comma": [false, {"multiline": "never", "singleline": "never"}],
+    "esSpecCompliant": true
 }
   
