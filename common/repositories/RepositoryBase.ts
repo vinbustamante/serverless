@@ -12,7 +12,10 @@ export default abstract class RepositoryBase {
 
     protected toModel(source: any) {        
         if (_.isObject(source) && _.isFunction(source.toObject)) {
-            source = source.toObject();
+            source = source.toObject();            
+            if (_.isObject(source._id)) {
+                source._id = source._id.toString();
+            }
         }
         return this._utilService.createObjectFrom(this.getModelClass(), source);
     }
