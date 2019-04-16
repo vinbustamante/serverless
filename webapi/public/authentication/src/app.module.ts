@@ -6,15 +6,14 @@ import { AppService } from './services/app.service';
 import AuthService from './services/AuthService';
 import AuthenticationController from './controllers/AuthenticationController';
 import JwtStrategy from './lib/passport/JwtStrategy';
-import mongoDbConnectionFactory from '../../../../common/repositories/factories/mongoDbConnectionFactory';
 import TimeoutInterceptor from '../../../../common/interceptor/TimeoutInterceptor';
 import AllExceptionFilter from '../../../../common/filter/AllExceptionFilter';
 
 // common services
-import UtilService from '../../../../common/services/UtilService';
+// import UtilService from '../../../../common/services/UtilService';
 
-// repositories
-import ApplicationRepository from './repositories/ApplicationRepository';
+import CommonServicesModule from '../../../../common/services/common.services.module';
+import AuthenticationServicesModule from './services/authentication.services.module';
 
 // controllers
 import { AppController } from './controllers/app.controller';
@@ -28,15 +27,14 @@ import { AppController } from './controllers/app.controller';
         expiresIn: 3600,
       },
     }),
+    CommonServicesModule,
+    AuthenticationServicesModule
   ],
   controllers: [AppController, AuthenticationController],
   providers: [
     AppService,
     AuthService,
     JwtStrategy,
-    ...mongoDbConnectionFactory,
-    ApplicationRepository,
-
     {
       provide: APP_FILTER,
       useClass: AllExceptionFilter,
@@ -53,9 +51,6 @@ import { AppController } from './controllers/app.controller';
         });
       }
     },
-
-    //services
-    UtilService
   ],
   exports: [PassportModule],
 })

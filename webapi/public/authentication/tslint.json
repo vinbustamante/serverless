@@ -21,10 +21,11 @@
         "allow-leading-underscore"
       ],
       "eofline": false,
-      "no-unused-variable": true
+      "no-unused-variable": true,
+      "trailing-comma": [false, {"multiline": "never", "singleline": "never"}],
+      "object-literal-shorthand": false
     },
-    "rulesDirectory": [],
-    "trailing-comma": [false, {"multiline": "never", "singleline": "never"}],
+    "rulesDirectory": [],    
     "esSpecCompliant": true
 }
   

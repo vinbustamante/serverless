@@ -1,17 +1,21 @@
-import { Controller, Post, Body, Inject } from '@nestjs/common';
+import { Controller, Post, Get, Body, Inject } from '@nestjs/common';
 import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewModel';
-import ApplicationRepository from '../repositories/ApplicationRepository';
+import ApplicationService from '../services/ApplicationService';
 
 @Controller('authentication')
 export default class AuthenticationController {
 
     @Inject()
-    private _applicationRepository: ApplicationRepository;
+    private _applicationService: ApplicationService;
 
     @Post()
     async createToken(@Body() credential: UserAuthenticationViewModel) {
-        const application = await this._applicationRepository.getById(credential.clientId);
+        const application = await this._applicationService.getById(credential.clientId);
         return application;
     }
 
+    @Get('test')
+    test() {
+        return 'test';
+    }
 }

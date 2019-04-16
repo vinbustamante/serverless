@@ -1,12 +1,12 @@
 import { Injectable, Inject } from '@nestjs/common';
 import * as mongoose from 'mongoose';
-import repositoryTypes from './repositoryTypes';
+//import repositoryTypes from './repositoryTypes';
 import UtilService from '../services/UtilService';
 
 @Injectable()
 export default abstract class MongoDbRepositoryBase<TModel> {
 
-    @Inject(repositoryTypes.mongoDbConnection)
+    //@Inject(repositoryTypes.mongoDbConnection)
     private _dbConnection: mongoose.Connection;
 
     @Inject()
