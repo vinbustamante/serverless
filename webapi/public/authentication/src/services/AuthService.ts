@@ -7,6 +7,7 @@ export default class AuthService {
 
     constructor(private readonly jwtService: JwtService) {}
 
+    // @ts-ignore
     async validateUser(payload: JwtPayloadDto): Promise<any> {
         return {
             id: 1,

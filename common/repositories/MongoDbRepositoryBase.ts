@@ -1,4 +1,3 @@
-const uuidv1 = require('uuid/v1');
 import { Injectable, Inject } from '@nestjs/common';
 import * as mongoose from 'mongoose';
 import repositoryTypes from './repositoryTypes';

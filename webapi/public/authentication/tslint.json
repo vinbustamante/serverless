@@ -12,7 +12,16 @@
       "member-ordering": [false],
       "interface-name": [false],
       "arrow-parens": false,
-      "object-literal-sort-keys": false
+      "object-literal-sort-keys": false,
+      "no-console": false,
+      "variable-name": [
+        true,
+        "ban-keywords",
+        "check-format",
+        "allow-leading-underscore"
+      ],
+      "eofline": false,
+      "no-unused-variable": true
     },
     "rulesDirectory": [],
     "trailing-comma": [false, {"multiline": "never", "singleline": "never"}],

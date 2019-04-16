@@ -1,4 +1,4 @@
-import { ExceptionFilter, ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, HttpStatus } from '@nestjs/common';
 import * as express from 'express';
 import ServiceException from '../services/exception/ServiceException';
 import RepositoryException from '../repositories/exception/RepositoryException';

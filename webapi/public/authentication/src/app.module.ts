@@ -2,7 +2,6 @@ import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
-import { MongooseModule } from '@nestjs/mongoose';
 import { AppService } from './services/app.service';
 import AuthService from './services/AuthService';
 import AuthenticationController from './controllers/AuthenticationController';
