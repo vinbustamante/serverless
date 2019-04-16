@@ -21,6 +21,6 @@ export default class ApplicationRepository extends MongoDbRepositoryBase {
     }
 
     getById(clientId: string): Promise<any> {
-        return super.findOne({clientId: clientId, $eq: 1});
+        return super.findOne({clientId: clientId});
     }
 }
