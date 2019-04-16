@@ -6,16 +6,16 @@ import JwtPayloadDto from '../../services/dto/JwtPayloadDto';
 
 @Injectable()
 export default class JwtStrategy extends PassportStrategy(Strategy, 'jwt') {
-    
-  constructor(private readonly authService: AuthService) {    
+
+  constructor(private readonly authService: AuthService) {
     super({
       jwtFromRequest: ExtractJwt.fromAuthHeaderAsBearerToken(),
-      //passReqToCallback: false,
+      // passReqToCallback: false,
       secretOrKey: 'secretKey',
     });
   }
 
-  async validate(payload: JwtPayloadDto) {   
+  async validate(payload: JwtPayloadDto) {
     const user = await this.authService.validateUser(payload);
     if (!user) {
       throw new UnauthorizedException();

@@ -9,7 +9,7 @@
       "noUnusedParameters": true,
       "target": "es6",
       "sourceMap": true,
-      "outDir": "./dist",
+      "outDir": "./.build",
       "baseUrl": "./"
     },
     "exclude": ["node_modules"]

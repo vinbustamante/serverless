@@ -12,7 +12,7 @@ export default class ApplicationRepository extends MongoDbRepositoryBase<Applica
 
     getDbSchema(): mongoose.Schema {
         return new mongoose.Schema({
-            _id : {
+            _id: {
                 type: String,
                 required: true
             },
@@ -23,15 +23,15 @@ export default class ApplicationRepository extends MongoDbRepositoryBase<Applica
             clientSecret: {
                 type: String,
                 required: true
-            },           
+            },
             isEnabled: {
                 type: Boolean,
                 required: true
             }
         });
     }
-    
+
     getById(clientId: string): Promise<ApplicationModel> {
-        return super.findOne({clientId: clientId});
+        return super.findOne({ clientId: clientId });
     }
 }
