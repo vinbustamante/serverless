@@ -30,6 +30,16 @@ export default class ConfigService {
         return this._convertValue(this._config.database.db);
     }
 
+    get publicKey(): string {
+        const value = this._convertValue(this._config.jwt.key.public);
+        return this._utilService.decodeBase64(value);
+    }
+
+    get privateKey(): string {
+        const value = this._convertValue(this._config.jwt.key.private);
+        return this._utilService.decodeBase64(value);
+    }
+
     protected _convertValue(value) {
         //hooks for later transformation
         return value;

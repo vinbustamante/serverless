@@ -1,13 +1,14 @@
 const crypto = require('crypto');
 import { Injectable, Inject } from '@nestjs/common';
 import * as _ from 'underscore';
-import "reflect-metadata";
 import { plainToClass } from "class-transformer";
 import { Reflector } from '@nestjs/core';
 import commonConstant from '../commonConstant';
 
 @Injectable()
 export default class UtilService {
+
+    private _decodedValue: any = {};
 
     @Inject()
     private _reflector: Reflector;
@@ -56,5 +57,18 @@ export default class UtilService {
     getTablename(modelClass: any): string {
         let tableName: string = this._reflector.get(commonConstant.TableName, modelClass);
         return tableName;
+    }
+
+    decodeBase64(value: string): string {
+        let decodedValue: string;
+        if (value) {
+            decodedValue = this._decodedValue[value];            
+            if(!decodedValue) {
+                let buffer = new Buffer(value, 'base64');
+                decodedValue = buffer.toString('ascii');
+                this._decodedValue[value] = decodedValue;
+            }
+        }
+        return decodedValue;
     }
 }
