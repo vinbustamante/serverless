@@ -1,6 +1,7 @@
 import { Controller, Post, Get, Body, Inject } from '@nestjs/common';
 import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewModel';
 import ApplicationService from '../services/ApplicationService';
+import publicHandler from '../../../../../common/decorator/publicHandler';
 
 @Controller('authentication')
 export default class AuthenticationController {
@@ -14,6 +15,7 @@ export default class AuthenticationController {
         return application;
     }
 
+    @publicHandler()
     @Get('test')
     test() {
         return 'test';

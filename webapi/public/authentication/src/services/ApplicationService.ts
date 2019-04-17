@@ -13,7 +13,7 @@ export default class ApplicationService extends BaseService {
         return ApplicationDto;
     }
 
-    async getById(clientId: string): Promise<any> {
+    async getById(clientId: string): Promise<ApplicationDto> {       
         const applicationModel = await this._applicationRepository.getById(clientId);
         return this.toDto(applicationModel);
     }

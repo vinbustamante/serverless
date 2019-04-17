@@ -1,9 +1,14 @@
-import { ArgumentsHost, HttpStatus } from '@nestjs/common';
+import { ArgumentsHost, HttpStatus, Inject, UnauthorizedException } from '@nestjs/common';
 import * as express from 'express';
 import ServiceException from '../services/exception/ServiceException';
 import RepositoryException from '../repositories/exception/RepositoryException';
+import LogService from '../services/LogService';
+import { TimeoutError } from 'rxjs';
 
 export default class BaseExceptionFilter {
+
+    @Inject()
+    private _logService: LogService;
 
     response(exception: any, host: ArgumentsHost, message?: string, status?: number) {
         const context = host.switchToHttp();
@@ -14,10 +19,14 @@ export default class BaseExceptionFilter {
         } else if (!message && exception instanceof RepositoryException) {
             //db error is risky since it has a potential to link credential
             message = 'Internal server error encountered';
-            console.log(exception);
-        } else {
-            console.log(exception);
-        }       
+        } else if(exception instanceof TimeoutError) {
+            status = 408;
+            message = 'Request timeout';
+        } else if(exception instanceof UnauthorizedException) {
+            message = exception.message || 'access denied';
+        }
+        this._logService.error(exception);
+
         response
             .status(status)
             .json({

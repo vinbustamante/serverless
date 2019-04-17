@@ -3,13 +3,17 @@ import AuthenticationRepositoriesModule from '../repositories/authentication.rep
 
 // services
 import ApplicationService from './ApplicationService';
+import ApplicationServiceCacheable from './cacheable/ApplicationServiceCacheable';
 
 @Module({
     imports: [
         AuthenticationRepositoriesModule
     ],
     providers: [
-        ApplicationService
+        {
+            provide: ApplicationService,
+            useClass: ApplicationServiceCacheable
+        }        
     ],
     exports: [
         ApplicationService

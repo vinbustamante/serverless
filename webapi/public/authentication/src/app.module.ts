@@ -1,4 +1,4 @@
-import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE } from '@nestjs/core';
+import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
 import { PassportModule } from '@nestjs/passport';
 import { JwtModule } from '@nestjs/jwt';
@@ -8,6 +8,7 @@ import AuthenticationController from './controllers/AuthenticationController';
 import JwtStrategy from './lib/passport/JwtStrategy';
 import TimeoutInterceptor from '../../../../common/interceptor/TimeoutInterceptor';
 import AllExceptionFilter from '../../../../common/filter/AllExceptionFilter';
+import TokenBearerGuard from '../../../../common/guard/TokenBearerGuard';
 
 // common services
 // import UtilService from '../../../../common/services/UtilService';
@@ -42,6 +43,10 @@ import { AppController } from './controllers/app.controller';
     {
       provide: APP_INTERCEPTOR,
       useClass: TimeoutInterceptor,
+    },
+    {
+      provide: APP_GUARD,
+      useClass: TokenBearerGuard,
     },
     {
       provide: APP_PIPE,
