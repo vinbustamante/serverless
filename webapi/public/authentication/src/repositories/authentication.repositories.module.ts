@@ -2,13 +2,25 @@ import { Module } from '@nestjs/common';
 import { MongooseModule } from '@nestjs/mongoose';
 import schemaMapping from './schemas/mapping';
 import CommonServicesModule from '../../../../../common/services/common.services.module';
+import ConfigService from '../../../../../common/services/ConfigService';
 
 // repositories
 import ApplicationRepository from './ApplicationRepository';
 
 @Module({
     imports: [
-        MongooseModule.forRoot('mongodb://localhost/local-sats-authentication', { useNewUrlParser: true }),
+        MongooseModule.forRootAsync({
+            imports: [ CommonServicesModule ],
+            inject: [ConfigService],
+            useFactory: async (config: ConfigService) => {
+                const host = config.dbHost;
+                const dbName = config.dbName;
+                return {
+                    uri: 'mongodb://' + host + '/' + dbName,
+                    useNewUrlParser: true
+                };
+            }
+        }),
         MongooseModule.forFeature(schemaMapping),
         CommonServicesModule
     ],

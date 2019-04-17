@@ -1,7 +1,7 @@
-import { Controller, Post, Get, Body, Inject } from '@nestjs/common';
+import { Controller, Post, Body, Inject } from '@nestjs/common';
 import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewModel';
 import ApplicationService from '../services/ApplicationService';
-import publicHandler from '../../../../../common/decorator/publicHandler';
+import Public from '../../../../../common/decorator/public';
 
 @Controller('authentication')
 export default class AuthenticationController {
@@ -9,15 +9,11 @@ export default class AuthenticationController {
     @Inject()
     private _applicationService: ApplicationService;
 
+
+    @Public()
     @Post()
     async createToken(@Body() credential: UserAuthenticationViewModel) {
         const application = await this._applicationService.getById(credential.clientId);
         return application;
-    }
-
-    @publicHandler()
-    @Get('test')
-    test() {
-        return 'test';
-    }
+    }    
 }

@@ -12,7 +12,6 @@ import AuthenticationServicesModule from './services/authentication.services.mod
 
 // controllers
 import { AppController } from './controllers/app.controller';
-
 @Module({
   imports: [
     PassportModule.register({ defaultStrategy: 'jwt' }),

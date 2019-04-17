@@ -19,5 +19,8 @@
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0",
     "underscore": "^1.9.1"
+  },
+  "devDependencies": {
+    "@types/underscore": "^1.8.14"
   }
 }
