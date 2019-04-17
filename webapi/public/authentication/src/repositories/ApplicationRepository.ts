@@ -1,6 +1,5 @@
 import * as mongoose from 'mongoose';
 import { Injectable } from '@nestjs/common';
-// import RepositoryBase from '../../../../../common/repositories/RepositoryBase';
 import MongoDbRepositoryBase from '../../../../../common/repositories/MongoDbRepositoryBase';
 import { InjectModel } from '@nestjs/mongoose';
 import tableNames from './schemas/tableNames';

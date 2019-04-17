@@ -13,7 +13,7 @@ export default class BaseExceptionFilter {
     response(exception: any, host: ArgumentsHost, message?: string, status?: number) {
         const context = host.switchToHttp();
         const response = context.getResponse<express.Response>();
-        status = status || (exception.getStatus && exception.getStatus()) || HttpStatus.INTERNAL_SERVER_ERROR;        
+        status = status || (exception.getStatus && exception.getStatus()) || HttpStatus.INTERNAL_SERVER_ERROR;
         if (!message && exception instanceof ServiceException) {
             message = exception.message;
         } else if (!message && exception instanceof RepositoryException) {

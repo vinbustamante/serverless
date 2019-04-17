@@ -4,7 +4,7 @@ export default class ApplicationException extends Error {
 
     private _innerException: ApplicationException;
 
-    constructor(ex: any) {        
+    constructor(ex?: any) {        
         if (ex instanceof ApplicationException) {
             super(ex.message);
             this._innerException = ex;

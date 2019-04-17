@@ -4,6 +4,8 @@ import AuthenticationRepositoriesModule from '../repositories/authentication.rep
 // services
 import ApplicationService from './ApplicationService';
 import ApplicationServiceCacheable from './cacheable/ApplicationServiceCacheable';
+import UserService from './UserService';
+import AuthenticationService from './AuthenticationService';
 
 @Module({
     imports: [
@@ -13,10 +15,14 @@ import ApplicationServiceCacheable from './cacheable/ApplicationServiceCacheable
         {
             provide: ApplicationService,
             useClass: ApplicationServiceCacheable
-        }        
+        },
+        UserService,
+        AuthenticationService
     ],
     exports: [
-        ApplicationService
+        ApplicationService,
+        UserService,
+        AuthenticationService
     ]
 })
 export default class AuthenticationServicesModule { }

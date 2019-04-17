@@ -1,4 +1,5 @@
 const enum TableNames  {
-    application = 'application'
+    application = 'application',
+    user = 'user'
 }
 export default TableNames;

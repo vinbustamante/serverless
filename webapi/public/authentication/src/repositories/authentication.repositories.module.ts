@@ -6,6 +6,7 @@ import ConfigService from '../../../../../common/services/ConfigService';
 
 // repositories
 import ApplicationRepository from './ApplicationRepository';
+import UserRepository from './UserRepository';
 
 @Module({
     imports: [
@@ -25,10 +26,12 @@ import ApplicationRepository from './ApplicationRepository';
         CommonServicesModule
     ],
     providers: [
-        ApplicationRepository
+        ApplicationRepository,
+        UserRepository
     ],
     exports: [
-        ApplicationRepository
+        ApplicationRepository,
+        UserRepository
     ]
 })
 export default class AuthenticationRepositoriesModule { }
