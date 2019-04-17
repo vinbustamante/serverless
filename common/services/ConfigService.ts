@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import * as fs from 'fs';
 import * as _ from 'underscore';
+import * as objectPath from 'object-path';
 import UtilService from './UtilService';
 
 @Injectable()
 export default class ConfigService {
 
     private readonly _config: any;
+    private readonly _cacheValue = {};
 
     constructor(private readonly _utilService: UtilService, files: string[]) {
         let mergeConfig: any = {};
@@ -18,8 +20,9 @@ export default class ConfigService {
         this._config = mergeConfig;
     }
 
-    get port(): number {
-        return this._convertValue(this._config.port);
+    async getPort(): Promise<number> {
+        const value = await this._convertValue(this._config.port);
+        return parseInt(value, 10);
     }
 
     get dbHost(): string {
@@ -40,7 +43,14 @@ export default class ConfigService {
         return this._utilService.decodeBase64(value);
     }
 
-    protected _convertValue(value) {
+    getValue(key: string) {
+        if (this._cacheValue[key] === undefined){
+            this._cacheValue[key] = objectPath.get(this._config, key);
+        }
+        return this._convertValue(this._cacheValue[key]);
+    }
+
+    protected async _convertValue(value): Promise<any> {
         //hooks for later transformation
         return value;
     }

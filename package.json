@@ -16,11 +16,13 @@
     "class-validator": "^0.9.1",
     "crypto": "^1.0.1",
     "mongoose": "^5.5.0",
+    "object-path": "^0.11.4",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^6.4.0",
     "underscore": "^1.9.1"
   },
   "devDependencies": {
+    "@types/object-path": "^0.11.0",
     "@types/underscore": "^1.8.14"
   }
 }

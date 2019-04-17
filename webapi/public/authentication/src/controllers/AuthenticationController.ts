@@ -9,11 +9,10 @@ export default class AuthenticationController {
     @Inject()
     private _authenticationService: AuthenticationService;
 
-
     @Public()
     @Post('login')
     async login(@Body() credential: UserAuthenticationViewModel) {
         const result = await this._authenticationService.login(credential);
         return result;
-    }    
+    }
 }
