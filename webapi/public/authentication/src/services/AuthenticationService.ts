@@ -20,7 +20,7 @@ export default class AuthenticationService extends BaseService {
     }
 
     async login(credential: AuthenticationDto): Promise<AuthenticationResultDto> {
-        let result = new  AuthenticationResultDto();   
+        let result = new  AuthenticationResultDto();
         result.isSuccess = false; 
         const [ isAppLoginSuccess ] = await this._appLogin(credential);
         if (isAppLoginSuccess === true) {

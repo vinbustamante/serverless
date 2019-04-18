@@ -5,6 +5,14 @@ import * as _ from 'underscore';
 @Injectable()
 export default class DateService {
 
+    private readonly _timespanMap = {
+        s: 1,
+        m: 60,
+        h: 3600,
+        d: 86400
+    };
+
+
     getCurrentUtcDate(): Date {
         return new Date(moment.utc().valueOf());
     }
@@ -46,5 +54,19 @@ export default class DateService {
             }
         }
         return convertedDate;
+    }
+
+    timespanToSeconds(timespan: string): number {
+        let seconds = 0;
+        if (timespan) {
+            const num = parseInt(timespan);
+            const span = timespan.replace(num.toString(), '').trim();
+            let multiplier = 1;
+            if (span) {
+                multiplier = this._timespanMap[span.toLowerCase()];
+            }
+            seconds = num * multiplier;
+        }
+        return seconds;
     }
 }

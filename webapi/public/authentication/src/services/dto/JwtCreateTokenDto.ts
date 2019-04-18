@@ -4,6 +4,6 @@ export default class JwtCreateTokenDto {
         issuer?: string;
         subject: string;
         audience: string;
-        ttl: string;
+        ttl: number;
     }
 }
