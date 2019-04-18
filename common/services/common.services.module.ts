@@ -2,6 +2,9 @@ import { Module } from '@nestjs/common';
 import UtilService from './UtilService';
 import LogService from './LogService';
 import ConfigService from './ConfigService';
+import FileService from './FileService';
+import FlowService from './FlowService';
+import JsonFileConfigMergeService from './JsonFileConfigMergeService';
 import * as path from 'path';
 
 @Module({
@@ -10,22 +13,30 @@ import * as path from 'path';
         LogService,
         {
             provide: ConfigService,
-            inject: [UtilService],
-            useFactory: (utilService) => {
+            inject: [JsonFileConfigMergeService, UtilService],
+            useFactory: async (jsonConfigMergeService: JsonFileConfigMergeService, utilService: UtilService) => {
                 const pwd = process.cwd();
                 const files = [
                     path.join(pwd,'config', 'default.json'),
                     path.join(pwd, 'config', `${process.env.NODE_ENV || 'dev'}.json`)
                 ];
-                const configService: any = new ConfigService(utilService, files);
+                const config = await jsonConfigMergeService.merge(files);
+                const configService: any = new ConfigService(config);
+                configService._utilService = utilService;
                 return configService;
             }
-        }
+        },
+        FileService,
+        FlowService,
+        JsonFileConfigMergeService
     ],
     exports: [
         ConfigService,
         UtilService,
-        LogService
+        LogService,
+        FileService,
+        FlowService,
+        JsonFileConfigMergeService
     ]
 })
 export default class CommonServicesModule { }

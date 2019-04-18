@@ -12,6 +12,7 @@
   "dependencies": {
     "@nestjs/common": "^6.0.5",
     "@nestjs/core": "^6.0.5",
+    "async": "^2.6.2",
     "class-transformer": "^0.2.0",
     "class-validator": "^0.9.1",
     "crypto": "^1.0.1",
@@ -22,6 +23,7 @@
     "underscore": "^1.9.1"
   },
   "devDependencies": {
+    "@types/async": "^2.4.1",
     "@types/object-path": "^0.11.0",
     "@types/underscore": "^1.8.14"
   }
