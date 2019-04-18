@@ -1,15 +1,11 @@
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import * as objectPath from 'object-path';
-import UtilService from './UtilService';
 
 @Injectable()
 export default class ConfigService {
 
     private readonly _config: any;
     private readonly _cacheValue = {};
-
-    @Inject()
-    private readonly _utilService: UtilService;
 
     constructor(config: object) {
         this._config = config;
@@ -28,14 +24,8 @@ export default class ConfigService {
         return this._config.database.db;
     }
 
-    get publicKey(): string {
-        const value = this._config.jwt.key.public;
-        return this._utilService.decodeBase64(value);
-    }
-
-    get privateKey(): string {
-        const value = this._config.jwt.key.private;
-        return this._utilService.decodeBase64(value);
+    get requestTimeout(): number {
+        return this._config.request.timeout;
     }
 
     getValue(key: string) {

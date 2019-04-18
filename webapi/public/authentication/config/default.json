@@ -8,6 +8,9 @@
     "project": {
         "name": "_project"
     },
+    "request": {
+        "timeout": 500
+    },
     "jwt": {
         "issuer": "redsoft",
         "encryption": "RS256",
