@@ -5,6 +5,7 @@ import ConfigService from './ConfigService';
 import FileService from './FileService';
 import FlowService from './FlowService';
 import JsonFileConfigMergeService from './JsonFileConfigMergeService';
+import DateService from './DateService';
 import * as path from 'path';
 
 @Module({
@@ -28,7 +29,8 @@ import * as path from 'path';
         },
         FileService,
         FlowService,
-        JsonFileConfigMergeService
+        JsonFileConfigMergeService,
+        DateService
     ],
     exports: [
         ConfigService,
@@ -36,7 +38,8 @@ import * as path from 'path';
         LogService,
         FileService,
         FlowService,
-        JsonFileConfigMergeService
+        JsonFileConfigMergeService,
+        DateService
     ]
 })
 export default class CommonServicesModule { }
