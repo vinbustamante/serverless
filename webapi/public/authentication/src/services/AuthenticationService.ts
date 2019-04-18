@@ -28,6 +28,7 @@ export default class AuthenticationService extends BaseService {
             if (isUserLoginSuccess === true) {
                 result.isSuccess = true;
                 result.username = credential.username;
+                result.displayName = userDto.displayName;
                 result.groups = userDto.groups;
             }
         }

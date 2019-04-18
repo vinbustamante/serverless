@@ -3,6 +3,7 @@ import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewMod
 import AuthenticationService from '../services/AuthenticationService';
 import JwtService from '../services/JwtService';
 import Public from '../../../../../common/decorator/public';
+import DateService from '../../../../../common/services/DateService';
 
 @Controller('authentication')
 export default class AuthenticationController {
@@ -13,19 +14,20 @@ export default class AuthenticationController {
     @Inject()
     private readonly _jwtService: JwtService;
 
+    @Inject()
+    private readonly _dateService: DateService;
+
     @Public()
     @Post('login')
-    async login(@Body() credential: UserAuthenticationViewModel) {
+    async login(@Body() credential: UserAuthenticationViewModel) {       
         const result = await this._authenticationService.login(credential);
-         // let jwtPayload = {
-            //     clientId: client.clientID,
-            //     userId: user.id,
-            //     displayName: user.displayName,
-            //     groups: userGroups || await this._getGroups(user.groups)
-            // }; 
-        const token = await this._jwtService.createToken({
-            payload: {
-            },
+        const jwtPayload = {
+                clientId: credential.clientId,
+                displayName: result.displayName,
+                groups: result.groups
+        };
+        const accessToken = await this._jwtService.createToken({
+            payload: jwtPayload,
             option: {
                 issuer: 'issuer',
                 subject: 'subject',
@@ -34,8 +36,7 @@ export default class AuthenticationController {
             }
         });
         return {
-            result: result,
-            token: token
+            access_token: accessToken
         };
     }
 }
