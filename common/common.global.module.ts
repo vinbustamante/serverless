@@ -1,9 +1,11 @@
 import { APP_INTERCEPTOR, APP_FILTER, APP_PIPE, APP_GUARD } from '@nestjs/core';
 import { Module, ValidationPipe } from '@nestjs/common';
 import AllExceptionFilter from './filter/AllExceptionFilter';
-import TimeoutInterceptor from './interceptor/TimeoutInterceptor';
 import TokenBearerGuard from './guard/TokenBearerGuard';
 import CommonServicesModule from './services/common.services.module';
+
+import TimeoutInterceptor from './interceptor/TimeoutInterceptor';
+import RequestAuditInterceptor from './interceptor/RequestAuditInterceptor';
 
 @Module({
     imports:[
@@ -16,7 +18,11 @@ import CommonServicesModule from './services/common.services.module';
         },
         {
             provide: APP_INTERCEPTOR,
-            useClass: TimeoutInterceptor,
+            useClass: TimeoutInterceptor
+        },
+        {
+            provide: APP_INTERCEPTOR,
+            useClass: RequestAuditInterceptor
         },
         {
             provide: APP_GUARD,

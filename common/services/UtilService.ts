@@ -15,7 +15,7 @@ export default class UtilService {
 
     toJson(value: any): any {
         let converted: any = value;
-        if (value && typeof value === 'object' ) {
+        if (value && typeof value === 'object') {
             converted = JSON.stringify(value)
         }
         return converted;
@@ -26,7 +26,7 @@ export default class UtilService {
         if (_.isString(value) && value.length > 0) {
             try {
                 converted = JSON.parse(value);
-            } catch(err) {               
+            } catch (err) {
                 converted = {};
             }
         }
@@ -46,7 +46,7 @@ export default class UtilService {
         return crypto.createHash(algorithm).update(json).digest('hex');
     }
 
-    createObjectFrom(klass:any, objectSource: object): any {
+    createObjectFrom(klass: any, objectSource: object): any {
         let model: any;
         if (klass && objectSource) {
             model = plainToClass(klass, objectSource);
@@ -62,9 +62,9 @@ export default class UtilService {
     decodeBase64(value: string): string {
         let decodedValue: string;
         if (value) {
-            decodedValue = this._decodedValue[value];            
-            if(!decodedValue) {
-                let buffer = new Buffer(value, 'base64');
+            decodedValue = this._decodedValue[value];
+            if (!decodedValue) {
+                let buffer = Buffer.from(value, 'base64');
                 decodedValue = buffer.toString('ascii');
                 this._decodedValue[value] = decodedValue;
             }

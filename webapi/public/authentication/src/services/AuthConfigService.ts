@@ -8,7 +8,7 @@ export default class AuthConfigService {
 
     @Inject()
     private readonly _configService: ConfigService;
-    
+
     @Inject()
     private readonly _utilService: UtilService;
 
@@ -16,7 +16,7 @@ export default class AuthConfigService {
         const privateKey = this._utilService.decodeBase64(this._configService.getValue('jwt.key.private'));
         const publicKey = this._utilService.decodeBase64(this._configService.getValue('jwt.key.public'));
         const config: JwtConfigDto = {
-            issuer : this._configService.getValue('jwt.issuer'),
+            issuer: this._configService.getValue('jwt.issuer'),
             encryption: this._configService.getValue('jwt.encryption'),
             privatekey: privateKey,
             publickey: publicKey,

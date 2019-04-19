@@ -25,7 +25,7 @@ export default class JwtService {
         if (credential) {
             const jwtConfig = this._authConfigService.jwt;
             const loginResult = await this._authenticationService.login(credential);
-            token.access_token = await this._createAccessToken(credential, loginResult);            
+            token.access_token = await this._createAccessToken(credential, loginResult);
             token.refresh_token = await this._createRefreshToken(credential, loginResult);
             token.expires_in = this._dateService.timespanToSeconds(jwtConfig.accessTokenTTL);
         }
@@ -43,7 +43,7 @@ export default class JwtService {
                 expiresIn: createTokenDto.option.ttl,
                 algorithm: jwtConfig.encryption
             };
-            let privateKey = jwtConfig.privatekey;
+            const privateKey = jwtConfig.privatekey;
             token = await jwt.sign(createTokenDto.payload, privateKey, jwtOptions);
         }
         return token;
