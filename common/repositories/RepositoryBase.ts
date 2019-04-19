@@ -8,15 +8,9 @@ export default abstract class RepositoryBase {
     @Inject()
     private _utilService: UtilService;
 
-    abstract getModelClass(): Function; 
+    abstract getModelClass(): Function;
 
-    protected toModel(source: any) {        
-        if (_.isObject(source) && _.isFunction(source.toObject)) {
-            source = source.toObject();            
-            if (_.isObject(source._id)) {
-                source._id = source._id.toString();
-            }
-        }
+    protected toModel(source: any) {
         return this._utilService.createObjectFrom(this.getModelClass(), source);
     }
 }

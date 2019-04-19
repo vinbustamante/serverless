@@ -26,11 +26,28 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
         return db.findOne(query)
             .exec()
             .then(response => {
-                return this.toModel(response);
+                const model = this.toModel(response);                
+                return model;
             })
             .catch(err => {                
                 return Promise.reject(new RepositoryException(err));
             });
     }
     
+    protected toModel(source: any) {
+        if (_.isObject(source) && source.toObject) {           
+            source = source.toObject();
+        }
+        if (source._id !== undefined) {
+            let id;
+            if (_.isObject(source._id)) {
+                id = source._id.toString();
+            } else {
+                id = source._id;
+            }
+            delete source._id;
+            source.id = id;
+        }
+        return super.toModel(source);
+    }
 }
