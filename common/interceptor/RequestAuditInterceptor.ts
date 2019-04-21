@@ -4,6 +4,7 @@ import { Reflector } from '@nestjs/core';
 import * as express from 'express';
 import MetaDataKey from '../enum/MetaDataKey';
 import { tap } from 'rxjs/operators';
+import AuditService from '../services/AuditService';
 
 @Injectable()
 export default class RequestAuditInterceptor implements NestInterceptor {
@@ -11,21 +12,18 @@ export default class RequestAuditInterceptor implements NestInterceptor {
     @Inject()
     private readonly _reflector: Reflector;
 
-    // @ts-ignore
-    intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-        const requestAuditInfo = this._createRequestAuditInfo(context);
-        console.log('********** requestAuditInfo *****************');
-        console.log(requestAuditInfo);
-        console.log('***************************');
+    @Inject()
+    private readonly _auditService: AuditService;
 
+    async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+        const requestAuditInfo = this._createRequestAuditInfo(context);
+        await this._auditService.record(requestAuditInfo);
         return next
             .handle()
             .pipe(
-                tap(httpBody => {
-                    const responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
-                    console.log('******** responseAuditInfo *******************');
-                    console.log(responseAuditInfo);
-                    console.log('***************************');
+                tap(async (httpBody) => {
+                    let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+                    await this._auditService.record(responseAuditInfo);
                 })
             );
     }

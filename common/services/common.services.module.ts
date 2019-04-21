@@ -1,4 +1,5 @@
 import { Module } from '@nestjs/common';
+import * as path from 'path';
 import UtilService from './UtilService';
 import LogService from './LogService';
 import ConfigService from './ConfigService';
@@ -6,7 +7,8 @@ import FileService from './FileService';
 import FlowService from './FlowService';
 import JsonFileConfigMergeService from './JsonFileConfigMergeService';
 import DateService from './DateService';
-import * as path from 'path';
+import AuditService from './AuditService';
+
 
 @Module({
     providers: [
@@ -30,7 +32,8 @@ import * as path from 'path';
         FileService,
         FlowService,
         JsonFileConfigMergeService,
-        DateService
+        DateService,
+        AuditService
     ],
     exports: [
         ConfigService,
@@ -39,7 +42,8 @@ import * as path from 'path';
         FileService,
         FlowService,
         JsonFileConfigMergeService,
-        DateService
+        DateService,
+        AuditService
     ]
 })
 export default class CommonServicesModule { }

@@ -71,4 +71,12 @@ export default class UtilService {
         }
         return decodedValue;
     }
+
+    objectToConstructor(instance): Function {
+        if (_.isFunction(instance)) {
+            return instance;
+        } else {
+            return instance.constructor;
+        }
+    }
 }

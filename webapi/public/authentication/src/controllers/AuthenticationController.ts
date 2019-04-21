@@ -3,7 +3,7 @@ import UserAuthenticationViewModel from '../viewModels/UserAuthenticationViewMod
 import JwtService from '../services/JwtService';
 import Public from '../../../../../common/decorator/public';
 import name from '../../../../../common/decorator/name';
-import { excludeRequestBodyForAudit } from '../../../../../common/decorator/excludeBodyForAudit';
+import { excludeRequestBodyForAudit } from '../../../../../common/decorator/excludeForAudit';
 
 @Controller('authentication')
 @name('authentication')
