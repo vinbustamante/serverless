@@ -1,5 +1,6 @@
 import { Injectable } from '@nestjs/common';
 import * as objectPath from 'object-path';
+import ServiceConfigDto from './dto/ServiceConfigDto';
 
 @Injectable()
 export default class ConfigService {
@@ -11,6 +12,14 @@ export default class ConfigService {
         this._config = config;
     }
 
+    get service(): ServiceConfigDto {
+        return {
+            name: this._config.service.name,
+            port: this._config.service.port,
+            requestTimeout: this._config.service.requestTimeout
+        };
+    }
+
     get port(): number {
         const value = this._config.service.port;
         return parseInt(value, 10);
@@ -19,7 +28,7 @@ export default class ConfigService {
     get dbHost(): string {
         return this._config.database.host;
     }
-    
+
     get serviceName(): string {
         return this._config.service.name;
     }
@@ -33,7 +42,7 @@ export default class ConfigService {
     }
 
     getValue(key: string) {
-        if (this._cacheValue[key] === undefined){
+        if (this._cacheValue[key] === undefined) {
             this._cacheValue[key] = objectPath.get(this._config, key);
         }
         return this._cacheValue[key];
