@@ -6,6 +6,10 @@ import MetaDataKey from '../enum/MetaDataKey';
 import { tap } from 'rxjs/operators';
 import AuditService from '../services/AuditService';
 
+import * as opentracing from 'opentracing';
+const initJaegerTracer = require('jaeger-client').initTracer;
+const tracer = initTracer('my-service-api') as opentracing.Tracer;
+
 @Injectable()
 export default class RequestAuditInterceptor implements NestInterceptor {
 
@@ -16,6 +20,8 @@ export default class RequestAuditInterceptor implements NestInterceptor {
     private readonly _auditService: AuditService;
 
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+        const span = tracer.startSpan('http_request');
+        span.log({'event': 'request_start'});
         const requestAuditInfo = this._createRequestAuditInfo(context);
         await this._auditService.record(requestAuditInfo);
         return next
@@ -23,6 +29,7 @@ export default class RequestAuditInterceptor implements NestInterceptor {
             .pipe(
                 tap(async (httpBody) => {
                     let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+                    span.finish();
                     await this._auditService.record(responseAuditInfo);
                 })
             );
@@ -84,3 +91,27 @@ export default class RequestAuditInterceptor implements NestInterceptor {
         };
     }
 }
+
+function initTracer(serviceName: string) {
+    const config = {
+      serviceName: serviceName,
+      sampler: {
+        type: 'const',
+        param: 1,
+      },
+      reporter: {
+        logSpans: true, // this logs whenever we send a span
+      },
+    };
+    const options = {
+      logger: {
+        info: function logInfo(msg: string) {
+          console.log('INFO  ', msg);
+        },
+        error: function logError(msg: string) {
+          console.log('ERROR ', msg);
+        },
+      },
+    };
+    return initJaegerTracer(config, options);
+  }

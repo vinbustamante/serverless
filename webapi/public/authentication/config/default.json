@@ -1,15 +1,16 @@
 {
-    "stage": "dev",
-    "port": 3001,
+    "stage": "dev",    
+    "service": {
+        "port": 3001,
+        "name": "authentication-service",
+        "requestTimeout": 500
+    },
     "database": {
         "host": "localhost",
         "db": "local-sats-authentication"
     },
     "project": {
         "name": "_project"
-    },
-    "request": {
-        "timeout": 500
     },
     "jwt": {
         "issuer": "redsoft",

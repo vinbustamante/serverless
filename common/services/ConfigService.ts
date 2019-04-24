@@ -12,12 +12,16 @@ export default class ConfigService {
     }
 
     get port(): number {
-        const value = this._config.port;
+        const value = this._config.service.port;
         return parseInt(value, 10);
     }
 
     get dbHost(): string {
         return this._config.database.host;
+    }
+    
+    get serviceName(): string {
+        return this._config.service.name;
     }
 
     get dbName(): string {
@@ -25,7 +29,7 @@ export default class ConfigService {
     }
 
     get requestTimeout(): number {
-        return this._config.request.timeout;
+        return this._config.service.requestTimeout;
     }
 
     getValue(key: string) {
