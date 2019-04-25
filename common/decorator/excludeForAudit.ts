@@ -2,7 +2,7 @@ import { SetMetadata } from '@nestjs/common';
 import 'reflect-metadata';
 import * as _ from 'underscore';
 import MetaDataKey from '../enum/MetaDataKey';
-import UtilService from '../services/UtilService';
+import ReflectionService from '../services/ReflectionService';
 
 export const excludeForAudit = () => {
     return (target: any, key?: any) => {
@@ -19,10 +19,10 @@ export const excludeForAudit = () => {
 export const excludeRequestBodyForAudit = () => SetMetadata(MetaDataKey.excludeRequestBodyForAudit, true);
 export const excludeResponseBodyForAudit = () => SetMetadata(MetaDataKey.excludeResponseBodyForAudit, true);
 
-let _utilService;
+let _reflectionService;
 function objectToConstructor(target: any): string {
-    if (_utilService === undefined) {
-        _utilService = new UtilService();
+    if (_reflectionService === undefined) {
+        _reflectionService = new ReflectionService();
     }
-    return _utilService.objectToConstructor(target);
+    return _reflectionService.objectToConstructor(target);
 }

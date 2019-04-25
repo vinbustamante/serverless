@@ -1,4 +1,4 @@
-import { Injectable, NestInterceptor, ExecutionContext, CallHandler, Inject } from '@nestjs/common';
+import { Injectable, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
 import { Observable } from 'rxjs';
 import { timeout } from 'rxjs/operators';
 import ConfigService from '../services/ConfigService';
@@ -6,13 +6,16 @@ import ConfigService from '../services/ConfigService';
 @Injectable()
 export default class TimeoutInterceptor implements NestInterceptor {
 
-  @Inject()
-  private readonly _configService: ConfigService;
+  private readonly _requestTimeout: number;
+
+  constructor(private readonly _configService: ConfigService) {
+    const serviceConfig = this._configService.service;
+    this._requestTimeout = serviceConfig.requestTimeout;
+  }
 
   // @ts-ignore
   intercept(context: ExecutionContext, next: CallHandler): Observable<any> {
-    const requestTimeout = this._configService.requestTimeout;
-    return next.handle().pipe(timeout(requestTimeout));
+    return next.handle().pipe(timeout(this._requestTimeout));
   }
   
 }

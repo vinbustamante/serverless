@@ -1,7 +1,7 @@
 import 'reflect-metadata';
 import * as _ from 'underscore';
 import { Injectable, Inject } from '@nestjs/common';
-import UtilService from './UtilService';
+import ReflectionService from './ReflectionService';
 import LogService from './LogService';
 import MetaDataKey from '../enum/MetaDataKey';
 
@@ -9,7 +9,7 @@ import MetaDataKey from '../enum/MetaDataKey';
 export default class AuditService {
 
     @Inject()
-    private readonly _utilService: UtilService;
+    private readonly _reflectionService: ReflectionService;
 
     @Inject()
     private readonly _logService: LogService;
@@ -34,12 +34,12 @@ export default class AuditService {
     }
 
     isClassExcluded(instance): boolean {
-        const klass = this._utilService.objectToConstructor(instance);
+        const klass = this._reflectionService.objectToConstructor(instance);
         return Reflect.getMetadata(MetaDataKey.excludeForAudit, klass) === true;
     }
 
     isPropertyExcluded(instance, property): boolean {
-        const klass = this._utilService.objectToConstructor(instance);
+        const klass = this._reflectionService.objectToConstructor(instance);
         return Reflect.getMetadata(MetaDataKey.excludeForAudit, klass, property) === true;
     }
 

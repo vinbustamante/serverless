@@ -11,11 +11,12 @@ import UserRepository from './UserRepository';
 @Module({
     imports: [
         MongooseModule.forRootAsync({
-            imports: [ CommonServicesModule ],
+            imports: [CommonServicesModule],
             inject: [ConfigService],
             useFactory: async (config: ConfigService) => {
-                const host = config.dbHost;
-                const dbName = config.dbName;
+                const dbConfig = config.database;
+                const host = dbConfig.host;
+                const dbName = dbConfig.database;
                 return {
                     uri: 'mongodb://' + host + '/' + dbName,
                     useNewUrlParser: true

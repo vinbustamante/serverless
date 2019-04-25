@@ -8,6 +8,8 @@ import FlowService from './FlowService';
 import JsonFileConfigMergeService from './JsonFileConfigMergeService';
 import DateService from './DateService';
 import AuditService from './AuditService';
+import TraceService from './TraceService';
+import ReflectionService from './ReflectionService';
 
 
 @Module({
@@ -33,7 +35,9 @@ import AuditService from './AuditService';
         FlowService,
         JsonFileConfigMergeService,
         DateService,
-        AuditService
+        AuditService,
+        TraceService,
+        ReflectionService
     ],
     exports: [
         ConfigService,
@@ -43,7 +47,9 @@ import AuditService from './AuditService';
         FlowService,
         JsonFileConfigMergeService,
         DateService,
-        AuditService
+        AuditService,
+        TraceService,
+        ReflectionService
     ]
 })
 export default class CommonServicesModule { }
