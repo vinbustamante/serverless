@@ -33,4 +33,4 @@ import { AppController } from './controllers/app.controller';
   ],
   exports: [PassportModule],
 })
-export class AppModule { }
+export class AppModule {}

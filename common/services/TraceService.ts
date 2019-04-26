@@ -2,8 +2,6 @@ import { Injectable, Inject } from '@nestjs/common';
 import * as opentracing from 'opentracing';
 import LogService from './LogService';
 import ConfigService from './ConfigService';
-import { Observable } from 'rxjs';
-//import { Observable} from 'rxjs';
 const initJaegerTracer = require('jaeger-client').initTracer;
 
 @Injectable()
@@ -19,11 +17,14 @@ export default class TraceService {
         this._tracer = this._initTracer(serviceConfig.name);
     }
 
-    trace(id: string, handler: (span: any) => Promise<Observable<any>>): Promise<Observable<any>> {
-        console.log('***************************');
-        console.log('id : ', id);
-        console.log('***************************');
-        const span = this._tracer.startSpan(id);
+    trace(id: string, handler: (span: any) => Promise<any>, parentSpan?: any): Promise<any> {
+        let parentContext: any;
+        if (parentSpan) {
+            parentContext= {
+                childOf: parentSpan
+            };
+        }
+        const span = this._tracer.startSpan(id, parentContext);
         return handler(span)
             .then(response => {               
                 span.finish();
@@ -32,6 +33,10 @@ export default class TraceService {
             .catch(err => {
                 return Promise.reject(err);
             });
+    }
+
+    extractContext(span) {
+        return this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, span);
     }
 
     private _initTracer(serviceName: string) {

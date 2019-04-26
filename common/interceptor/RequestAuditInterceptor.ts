@@ -9,10 +9,6 @@ import TraceService from '../services/TraceService';
 import ReflectionService from '../services/ReflectionService';
 import name from '../decorator/name';
 
-// import * as opentracing from 'opentracing';
-// const initJaegerTracer = require('jaeger-client').initTracer;
-//const tracer = initTracer('my-service-api') as opentracing.Tracer;
-
 @Injectable()
 @name('audit-interceptor')
 export default class RequestAuditInterceptor implements NestInterceptor {
@@ -22,41 +18,16 @@ export default class RequestAuditInterceptor implements NestInterceptor {
 
     @Inject()
     private readonly _auditService: AuditService;
-    
+
     @Inject()
     private readonly _reflectionService: ReflectionService;
 
     @Inject()
     private readonly _traceService: TraceService;
 
-    async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {       
-        // console.log('********* _traceService ******************');
-        // console.log(this._traceService);
-        // console.log('***************************');
-        // const requestAuditInfo = this._createRequestAuditInfo(context);
-        // await this._auditService.record(requestAuditInfo);
-        // return next
-        //     .handle()
-        //     .pipe(
-        //         tap(async (httpBody) => {
-        //             let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
-        //             await this._auditService.record(responseAuditInfo);
-        //         })
-        //     );   
-
-        // const span = tracer.startSpan('http_request');
-        // span.log({'event': 'request_start'});
-        // const requestAuditInfo = this._createRequestAuditInfo(context);
-        // await this._auditService.record(requestAuditInfo);
-        // return next
-        //     .handle()
-        //     .pipe(
-        //         tap(async (httpBody) => {
-        //             let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
-        //             span.finish();
-        //             await this._auditService.record(responseAuditInfo);
-        //         })
-        //     );
+    async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
+        const request = context.switchToHttp().getRequest();
+        const parentContext = this._traceService.extractContext(request.headers);
         const id = this._reflectionService.name(this);
         return this._traceService.trace(id, async (span) => {
             const requestAuditInfo = this._createRequestAuditInfo(context);
@@ -64,14 +35,14 @@ export default class RequestAuditInterceptor implements NestInterceptor {
             return next
                 .handle()
                 .pipe(
-                    tap(async (httpBody) => {                        
+                    tap(async (httpBody) => {
                         let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
                         span.finish();
                         await this._auditService.record(responseAuditInfo);
                         return httpBody;
                     })
                 );
-        });
+        }, parentContext);
     }
 
     private _createRequestAuditInfo(context: ExecutionContext): object {
@@ -130,27 +101,3 @@ export default class RequestAuditInterceptor implements NestInterceptor {
         };
     }
 }
-
-// function initTracer(serviceName: string) {
-//     const config = {
-//       serviceName: serviceName,
-//       sampler: {
-//         type: 'const',
-//         param: 1,
-//       },
-//       reporter: {
-//         logSpans: true, // this logs whenever we send a span
-//       },
-//     };
-//     const options = {
-//       logger: {
-//         info: function logInfo(msg: string) {
-//           console.log('INFO  ', msg);
-//         },
-//         error: function logError(msg: string) {
-//           console.log('ERROR ', msg);
-//         },
-//       },
-//     };
-//     return initJaegerTracer(config, options);
-//   }
