@@ -26,9 +26,9 @@ export default class RequestAuditInterceptor implements NestInterceptor {
     private readonly _traceService: TraceService;
 
     async intercept(context: ExecutionContext, next: CallHandler): Promise<Observable<any>> {
-        const request = context.switchToHttp().getRequest();
-        const parentContext = this._traceService.extractContext(request.headers);
         const id = this._reflectionService.name(this);
+        const request = context.switchToHttp().getRequest();
+        const parentContext = this._traceService.getContext(request.headers);
         return this._traceService.trace(id, async (span) => {
             const requestAuditInfo = this._createRequestAuditInfo(context);
             await this._auditService.record(requestAuditInfo);

@@ -1,5 +1,6 @@
 enum MetaDataKey {
     name = 'name',
+    traceHeader = 'trace-header',
     publicHandler = 'public-handler',
     excludeForAudit = 'exclude-for-audit',
     excludeRequestBodyForAudit = 'exclude-request-body-for-audit',

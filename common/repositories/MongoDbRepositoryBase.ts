@@ -4,6 +4,7 @@ import { Injectable, Inject } from '@nestjs/common';
 import RepositoryBase from './RepositoryBase';
 import RepositoryException from './exception/RepositoryException';
 import TraceService from '../services/TraceService';
+// let threadStorage = require('continuation-local-storage');
 
 @Injectable()
 export default abstract class MongoDbRepositoryBase extends RepositoryBase {
@@ -50,8 +51,15 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
         //     .catch(err => {                
         //         return Promise.reject(new RepositoryException(err));
         //     });
-        const self = this;
-        return this._traceService.trace(self._name(), (span: any) => {
+        const self = this;      
+        const id = self._name();
+        // console.log('***************************');
+        // const tls = threadStorage.getNamespace('authentication-service');
+        // console.log(id);
+        // console.log('manual header : ', tls.get('trace-header'));
+        // console.log(tls);
+        // console.log('***************************');
+        return this._traceService.trace(id, (span: any) => {
             const db = this.getDb();
             return db.findOne(query)
                 .exec()

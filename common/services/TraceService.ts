@@ -2,28 +2,34 @@ import { Injectable, Inject } from '@nestjs/common';
 import * as opentracing from 'opentracing';
 import LogService from './LogService';
 import ConfigService from './ConfigService';
+import MetaDataKey from '../enum/MetaDataKey';
 const initJaegerTracer = require('jaeger-client').initTracer;
+let threadStorage = require('continuation-local-storage');
 
 @Injectable()
 export default class TraceService {
 
     private _tracer: opentracing.Tracer;
+    private _threadLocalSrorage: any;
 
     @Inject()
-    private readonly _logService: LogService;
+    private readonly _logService: LogService;    
 
     constructor(private readonly _configService: ConfigService) {
         const serviceConfig = this._configService.service;
-        this._tracer = this._initTracer(serviceConfig.name);
+        this._tracer = this._initTracer(serviceConfig.name);        
+    }
+
+    createSpan(id: string) {
+        return this._tracer.startSpan(id);;
     }
 
     trace(id: string, handler: (span: any) => Promise<any>, parentSpan?: any): Promise<any> {
-        let parentContext: any;
-        if (parentSpan) {
-            parentContext= {
-                childOf: parentSpan
-            };
-        }
+        let parentContext = this._createParentContext(parentSpan);
+        // console.log('***************************');
+        // console.log('id : ', id);
+        // console.log('parentContext : ', parentContext);
+        // console.log('***************************');
         const span = this._tracer.startSpan(id, parentContext);
         return handler(span)
             .then(response => {               
@@ -34,11 +40,7 @@ export default class TraceService {
                 return Promise.reject(err);
             });
     }
-
-    extractContext(span) {
-        return this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, span);
-    }
-
+    
     private _initTracer(serviceName: string) {
         const config = {
             serviceName: serviceName,
@@ -54,5 +56,34 @@ export default class TraceService {
             logger: this._logService
         };
         return initJaegerTracer(config, options);
+    }
+
+    private _createParentContext(parentSpan?: any) {
+        let parentContext: any;
+        if (!parentSpan) {
+            parentSpan = this.getContext();
+        }
+        if (parentSpan) {
+            parentContext= {
+                childOf: parentSpan
+            };
+        }
+        return parentContext;
+    }
+
+    getContext(span?: any) {
+        let context: any;
+        if (this._threadLocalSrorage === undefined) {
+            // const serviceConfig = this._configService.service; 
+            this._threadLocalSrorage = threadStorage.getNamespace('servicename');
+            // if (!this._threadLocalSrorage) {
+            //     this._threadLocalSrorage = threadStorage.createNamespace(serviceConfig.name);
+            // }
+        }
+        const header = span || this._threadLocalSrorage.get(MetaDataKey.traceHeader);
+        if (header) {
+            context = this._tracer.extract(opentracing.FORMAT_HTTP_HEADERS, header);
+        }
+        return context;
     }
 }

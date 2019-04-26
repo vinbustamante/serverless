@@ -4,7 +4,7 @@ import commonServicesModule from '../../../../../common/services/common.services
 
 // services
 import ApplicationService from './ApplicationService';
-import ApplicationServiceCacheable from './cacheable/ApplicationServiceCacheable';
+// import ApplicationServiceCacheable from './cacheable/ApplicationServiceCacheable';
 import UserService from './UserService';
 import AuthenticationService from './AuthenticationService';
 import AuthConfigService from './AuthConfigService';
@@ -16,10 +16,11 @@ import JwtService from './JwtService';
         AuthenticationRepositoriesModule
     ],
     providers: [
-        {
-            provide: ApplicationService,
-            useClass: ApplicationServiceCacheable
-        },
+        // {
+        //     provide: ApplicationService,
+        //     useClass: ApplicationServiceCacheable
+        // },
+        ApplicationService,
         UserService,
         AuthenticationService,
         JwtService,
