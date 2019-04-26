@@ -31,14 +31,21 @@ export default class RequestAuditInterceptor implements NestInterceptor {
         const parentContext = this._traceService.getContext(request.headers);
         return this._traceService.trace(id, async (span) => {
             const requestAuditInfo = this._createRequestAuditInfo(context);
+            span.setTag('request-info', requestAuditInfo);
+            span.setTag('request-test1', 'pass 1');
             await this._auditService.record(requestAuditInfo);
             return next
                 .handle()
                 .pipe(
                     tap(async (httpBody) => {
+                        span.setTag('request-test2', 'pass 2');
                         let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+                        span.setTag('eeee-info', responseAuditInfo);
+                        console.log('********* httpBody 4 ******************');
+                        console.log(responseAuditInfo);
+                        console.log('***************************');                        
+                        await this._auditService.record(responseAuditInfo);                        
                         span.finish();
-                        await this._auditService.record(responseAuditInfo);
                         return httpBody;
                     })
                 );

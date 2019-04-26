@@ -21,15 +21,11 @@ export default class TraceService {
     }
 
     createSpan(id: string) {
-        return this._tracer.startSpan(id);;
+        return this._tracer.startSpan(id);
     }
 
     trace(id: string, handler: (span: any) => Promise<any>, parentSpan?: any): Promise<any> {
         let parentContext = this._createParentContext(parentSpan);
-        // console.log('***************************');
-        // console.log('id : ', id);
-        // console.log('parentContext : ', parentContext);
-        // console.log('***************************');
         const span = this._tracer.startSpan(id, parentContext);
         return handler(span)
             .then(response => {               
@@ -74,11 +70,11 @@ export default class TraceService {
     getContext(span?: any) {
         let context: any;
         if (this._threadLocalSrorage === undefined) {
-            // const serviceConfig = this._configService.service; 
-            this._threadLocalSrorage = threadStorage.getNamespace('servicename');
-            // if (!this._threadLocalSrorage) {
-            //     this._threadLocalSrorage = threadStorage.createNamespace(serviceConfig.name);
-            // }
+            const serviceConfig = this._configService.service; 
+            this._threadLocalSrorage = threadStorage.getNamespace(serviceConfig.name);
+            if (!this._threadLocalSrorage) {
+                this._threadLocalSrorage = threadStorage.createNamespace(serviceConfig.name);
+            }
         }
         const header = span || this._threadLocalSrorage.get(MetaDataKey.traceHeader);
         if (header) {
