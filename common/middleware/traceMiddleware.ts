@@ -4,7 +4,8 @@ import * as opentracing from 'opentracing';
 import TraceService from '../services/TraceService';
 // import ConfigService from '../services/ConfigService';
 import MetaDataKey from '../enum/MetaDataKey';
-const threadStorage = require('continuation-local-storage');
+//const threadStorage = require('continuation-local-storage');
+const threadStorage = require('cls-hooked');
 const uuid = require('node-uuid');
 
 // @ts-ignore

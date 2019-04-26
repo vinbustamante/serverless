@@ -5,9 +5,9 @@ import traceMiddleware from '../../../../common/middleware/traceMiddleware';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
-  const configService = app.get(ConfigService);
-  app.enableCors();
   app.use(traceMiddleware(app));
+  const configService = app.get(ConfigService);
+  app.enableCors();  
   const serviceConfig = configService.service;
   await app.listen(serviceConfig.port);
 }
