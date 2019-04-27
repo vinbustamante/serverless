@@ -1,4 +1,4 @@
-export default class JwtCreateTokenDto {    
+export default class JwtCreateTokenDto {
     payload: any;
     option: {
         issuer?: string;

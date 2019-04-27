@@ -6,7 +6,7 @@ import tableNames from './schemas/tableNames';
 import UserModel from './models/UserModel';
 
 @Injectable()
-export default class UserRepository extends MongoDbRepositoryBase  {
+export default class UserRepository extends MongoDbRepositoryBase {
 
     @InjectModel(tableNames.user)
     private _userModel: mongoose.Model<mongoose.Document>;
@@ -19,7 +19,14 @@ export default class UserRepository extends MongoDbRepositoryBase  {
         return UserModel;
     }
 
-    getByUsername(username: string): Promise<any> {
-        return super.findOne({username: username});
+    getByUsername(username: string, parentContext?: any): Promise<any> {
+        return super.findOne({username: username}, parentContext);
+        // const self = this;
+        // const id = this._reflectionService.name(this);
+        // return this._traceService.trace(id, async (span) => {
+        //     const userModel = await self.findOne({ username: username });
+        //     span.finish();
+        //     return userModel;
+        // }, parentContext);
     }
 }

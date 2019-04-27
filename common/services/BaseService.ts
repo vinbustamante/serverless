@@ -1,6 +1,7 @@
 import { Injectable, Inject } from '@nestjs/common';
 import UtilService from '../services/UtilService';
 import ReflectionService from '../services/ReflectionService';
+import TraceService from './TraceService';
 
 @Injectable()
 export default abstract class BaseService {
@@ -8,7 +9,10 @@ export default abstract class BaseService {
     private _utilService: UtilService;
 
     @Inject()
-    private _reflectionService: ReflectionService;
+    protected _reflectionService: ReflectionService;
+
+    @Inject()
+    protected readonly _traceService: TraceService;
 
     abstract getDtoClass(): Function; 
 

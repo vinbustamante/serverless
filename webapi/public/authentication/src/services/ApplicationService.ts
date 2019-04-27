@@ -4,6 +4,7 @@ import BaseService from '../../../../../common/services/BaseService';
 import ApplicationRepository from '../repositories/ApplicationRepository';
 import ApplicationDto from './dto/ApplicationDto';
 
+
 @Injectable()
 export default class ApplicationService extends BaseService {
 
@@ -17,14 +18,15 @@ export default class ApplicationService extends BaseService {
         return ApplicationDto;
     }
 
-    async getById(clientId: string): Promise<ApplicationDto> {
-        const applicationModel = await this._applicationRepository.getById(clientId);
-        return this.toDto(applicationModel);
-        // return this._traceService.trace(this._name(), async (span) => {
-        //     const applicationModel = await this._applicationRepository.getById(clientId);
-        //     const dto = this.toDto(applicationModel);
-        //     span.finish();
-        //     return dto;
-        // });
+    async getById(clientId: string, parentContext?: any): Promise<ApplicationDto> {
+        // const applicationModel = await this._applicationRepository.getById(clientId);
+        // return this.toDto(applicationModel);
+        const id = this._reflectionService.name(this) + '/getById';
+        return this._traceService.trace(id, async (span) => {
+            const applicationModel = await this._applicationRepository.getById(clientId, span);
+            const dto = this.toDto(applicationModel);
+            span.finish();
+            return dto;
+        }, parentContext);
     }
 }

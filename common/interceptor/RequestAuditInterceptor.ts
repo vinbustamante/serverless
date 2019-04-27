@@ -1,9 +1,9 @@
 import { Injectable, Inject, NestInterceptor, ExecutionContext, CallHandler } from '@nestjs/common';
-import { Observable } from 'rxjs';
+import { Observable, of } from 'rxjs';
 import { Reflector } from '@nestjs/core';
 import * as express from 'express';
 import MetaDataKey from '../enum/MetaDataKey';
-import { tap } from 'rxjs/operators';
+// import { tap } from 'rxjs/operators';
 import AuditService from '../services/AuditService';
 import TraceService from '../services/TraceService';
 import ReflectionService from '../services/ReflectionService';
@@ -32,23 +32,40 @@ export default class RequestAuditInterceptor implements NestInterceptor {
         return this._traceService.trace(id, async (span) => {
             const requestAuditInfo = this._createRequestAuditInfo(context);
             span.setTag('request-info', requestAuditInfo);
-            span.setTag('request-test1', 'pass 1');
             await this._auditService.record(requestAuditInfo);
-            return next
-                .handle()
-                .pipe(
-                    tap(async (httpBody) => {
-                        span.setTag('request-test2', 'pass 2');
-                        let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
-                        span.setTag('eeee-info', responseAuditInfo);
-                        console.log('********* httpBody 4 ******************');
-                        console.log(responseAuditInfo);
-                        console.log('***************************');                        
-                        await this._auditService.record(responseAuditInfo);                        
-                        span.finish();
-                        return httpBody;
-                    })
-                );
+            // return next
+            //     .handle()
+            //     .subscribe(async (httpBody) => {
+            //         let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+            //         await this._auditService.record(responseAuditInfo);
+            //         return of(httpBody);
+            //     });
+
+            // @ts-ignore
+            return new Promise((resolve, reject) => {
+                next.handle()
+                    .subscribe(async (httpBody) => {
+                            let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+                            span.setTag('response-info', responseAuditInfo);
+                            await this._auditService.record(responseAuditInfo);
+                            resolve(of(httpBody));
+                        },
+                        err => {
+                            reject(err);
+                        }
+                    );
+            });
+
+            // return next
+            //     .handle()
+            //     .pipe(
+            //         tap(async (httpBody) => {
+            //             let responseAuditInfo = this._createResponseAuditInfo(context, httpBody);
+            //             span.setTag('response-info', responseAuditInfo);
+            //             await this._auditService.record(responseAuditInfo);                        
+            //             return httpBody;
+            //         })
+            //     );
         }, parentContext);
     }
 

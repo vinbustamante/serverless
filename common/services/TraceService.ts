@@ -1,4 +1,5 @@
 import { Injectable, Inject } from '@nestjs/common';
+import * as _ from 'underscore';
 import * as opentracing from 'opentracing';
 import LogService from './LogService';
 import ConfigService from './ConfigService';
@@ -24,15 +25,17 @@ export default class TraceService {
         return this._tracer.startSpan(id);
     }
 
-    trace(id: string, handler: (span: any) => Promise<any>, parentSpan?: any): Promise<any> {
+    trace(id: string, handler: (span?: any) => Promise<any>, parentSpan?: any): Promise<any> {
         let parentContext = this._createParentContext(parentSpan);
         const span = this._tracer.startSpan(id, parentContext);
         return handler(span)
-            .then(response => {               
+            .then(response => {        
                 span.finish();
                 return response;
             })
             .catch(err => {
+                span.setTag('error', true);
+                span.finish();
                 return Promise.reject(err);
             });
     }
@@ -58,6 +61,8 @@ export default class TraceService {
         let parentContext: any;
         if (!parentSpan) {
             parentSpan = this.getContext();
+        } else if(_.isFunction(parentSpan.context)) {
+            parentSpan = parentSpan.context();
         }
         if (parentSpan) {
             parentContext= {

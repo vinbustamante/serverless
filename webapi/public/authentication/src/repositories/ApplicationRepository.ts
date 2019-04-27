@@ -19,7 +19,14 @@ export default class ApplicationRepository extends MongoDbRepositoryBase {
         return ApplicationModel;
     }
 
-    getById(clientId: string): Promise<any> {
-        return super.findOne({clientId: clientId});
+    getById(clientId: string, parentContext?): Promise<any> {
+        return super.findOne({clientId: clientId}, parentContext);
+        // const self = this;
+        // const id = this._reflectionService.name(this);
+        // return this._traceService.trace(id, async (span) => {
+        //     const applicationModel = await self.findOne({clientId: clientId});
+        //     span.finish();
+        //     return applicationModel;
+        // }, parentContext);
     }
 }

@@ -22,4 +22,9 @@ export default class ReflectionService {
         const klassName = this._reflector.get<string>(MetaDataKey.name, klass) || klass.name;
         return klassName;
     }
+
+    // funcName(func) {
+    //     func = func || this.funcName.caller.name;
+    //     return func.name;
+    // }
 }

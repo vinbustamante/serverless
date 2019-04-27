@@ -2,7 +2,7 @@
     "stage": "dev",    
     "service": {
         "port": 3001,
-        "name": "authentication-service",
+        "name": "authentication-microservice",
         "requestTimeout": 500
     },
     "database": {

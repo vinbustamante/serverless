@@ -1,20 +1,16 @@
 import * as _ from 'underscore';
 import * as mongoose from 'mongoose';
-import { Injectable, Inject } from '@nestjs/common';
+import { Injectable } from '@nestjs/common';
 import RepositoryBase from './RepositoryBase';
 import RepositoryException from './exception/RepositoryException';
-import TraceService from '../services/TraceService';
 // let threadStorage = require('continuation-local-storage');
 
 @Injectable()
 export default abstract class MongoDbRepositoryBase extends RepositoryBase {
-
-    @Inject()
-    private readonly _traceService: TraceService;
-
+    
     abstract getDb(): mongoose.Model<mongoose.Document>;
 
-    protected find(query: any) {
+    protected find(query: any, parentContext?) {
         // const db = this.getDb();
         // return db.find(query)
         //     .exec()
@@ -25,8 +21,10 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
         //         return Promise.reject(new RepositoryException(err));
         //     });
         const self = this;
-        return this._traceService.trace(self._name(), (span: any) => {
+        const id = self._name() + '/find';
+        return this._traceService.trace(id, (span: any) => {
             const db = self.getDb();
+            span.setTag('query', query);
             return db.find(query)
                 .exec()
                 .then(response => {
@@ -37,10 +35,10 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
                 .catch(err => {
                     return Promise.reject(new RepositoryException(err));
                 });
-        });
+        }, parentContext);
     }
 
-    protected findOne(query: any): Promise<any> {
+    protected findOne(query: any, parentContext?): Promise<any> {
         // const db = this.getDb();
         // return db.findOne(query)
         //     .exec()
@@ -52,7 +50,7 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
         //         return Promise.reject(new RepositoryException(err));
         //     });
         const self = this;      
-        const id = self._name();
+        const id = self._name() + '/findOne';
         // console.log('***************************');
         // const tls = threadStorage.getNamespace('authentication-service');
         // console.log(id);
@@ -60,7 +58,8 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
         // console.log(tls);
         // console.log('***************************');
         return this._traceService.trace(id, (span: any) => {
-            const db = this.getDb();
+            span.setTag('query', query);
+            const db = this.getDb();            
             return db.findOne(query)
                 .exec()
                 .then(response => {
@@ -71,7 +70,7 @@ export default abstract class MongoDbRepositoryBase extends RepositoryBase {
                 .catch(err => {
                     return Promise.reject(new RepositoryException(err));
                 });
-        });
+        }, parentContext);
     }
 
     protected toModel(source: any) {
